@@ -1,0 +1,89 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+    typeName: 'Libro',
+    typeNamePlural: 'Libros',
+    typeImageUrl: '',
+    imageUrl: 'Imagen',
+    title: {
+        type: #STANDARD,
+        label: '',
+        iconUrl: '',
+        criticality: '',
+        criticalityRepresentation: #WITHOUT_ICON,
+        value: 'Titulo',
+        valueQualifier: '',
+        targetElement: '',
+        url: ''
+    },
+    description: {
+        type: #STANDARD,
+        label: '',
+        iconUrl: '',
+        criticality: '',
+        criticalityRepresentation: #WITHOUT_ICON,
+        value: 'Autor',
+        valueQualifier: '',
+        targetElement: '',
+        url: ''
+    }
+}
+@Search.searchable: true
+annotate view ZDDC_LIBROS_5712 with
+{
+  @UI.facet: [  { id: 'TabDetallesLibro', label: 'Detalles del Libro', type: #COLLECTION, position: 10 },
+                { id: 'Libro', parentId: 'TabDetallesLibro', label: 'Detalles', type: #FIELDGROUP_REFERENCE, targetQualifier: 'TabDetallesLibro', position: 10 },
+
+                { id: 'TabClientes', label: 'Clientes', type: #LINEITEM_REFERENCE, targetElement: '_Clientes', position: 30 }]
+
+  @UI.fieldGroup: [{ qualifier: 'TabDetallesLibro', position: 10 }]
+  IdLibro;
+
+  @UI.lineItem: [{ position: 10, importance: #HIGH }]
+  @UI.selectionField: [{ position: 10 }]
+  Titulo;
+
+
+  @Search: {
+      defaultSearchElement: true,
+      ranking: #HIGH,
+      fuzzinessThreshold:  0.8
+  }
+  @UI.lineItem: [{ position: 20, importance: #HIGH }]
+  @UI.selectionField: [{ position: 30 }]
+  Editorial;
+
+  @UI.lineItem: [{ position: 30, importance: #HIGH }]
+  @Consumption.valueHelpDefinition: [{ entity:{ name: 'ZDDC_CATEGORIAS_5712',
+                                                element: 'Descripcion'} }]
+  @UI.selectionField: [{ position: 40 }]
+  Categoria;
+
+  @UI.lineItem: [{ position: 40, importance: #MEDIUM }]
+  Autor;
+
+  @UI.lineItem: [{ position: 50, importance: #MEDIUM }]
+  Idioma;
+
+  @UI.lineItem: [{ position: 60, importance: #MEDIUM }]
+  Paginas;
+
+  @UI.lineItem: [{ position: 70, importance: #MEDIUM }]
+  Precio;
+
+  @UI.lineItem: [{ position: 80, importance: #MEDIUM }]
+  Moneda;
+
+  @UI.lineItem: [{ position: 90, importance: #MEDIUM }]
+  Formato;
+
+  @UI.lineItem: [{ position: 110, importance: #MEDIUM, criticality: 'Ventas' }]
+  Estado;
+
+  @UI.lineItem: [{ position: 120, importance: #MEDIUM }]
+  Ventas;
+
+  @UI.lineItem: [{ position: 130, importance: #MEDIUM }]
+  /* Associations */
+  _Clientes;
+
+}

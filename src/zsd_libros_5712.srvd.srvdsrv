@@ -1,0 +1,6 @@
+@EndUserText.label: 'Libros - Service Definition'
+define service ZSD_LIBROS_5712 {
+  expose ZDDC_LIBROS_5712     as Libros;
+  expose ZDDC_CLIENTES_5712   as Clientes;
+  expose ZDDC_CATEGORIAS_5712 as Categorias;
+}

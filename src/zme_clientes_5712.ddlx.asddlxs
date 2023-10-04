@@ -1,0 +1,60 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+    typeName: 'Cliente',
+    typeNamePlural: 'Clientes',
+    typeImageUrl: '',
+    imageUrl: 'Imagen',
+    title: {
+        type: #STANDARD,
+        label: 'Nombre',
+        iconUrl: '',
+        criticality: '',
+        criticalityRepresentation: #WITHOUT_ICON,
+        value: '',
+        valueQualifier: '',
+        targetElement: '',
+        url: ''
+    },
+    description: {
+        type: #STANDARD,
+        label: 'IdCliente',
+        iconUrl: '',
+        criticality: '',
+        criticalityRepresentation: #WITHOUT_ICON,
+        value: '',
+        valueQualifier: '',
+        targetElement: '',
+        url: ''
+    }
+}
+annotate view ZDDC_CLIENTES_5712 with
+{
+  @UI.facet: [{ position: 10, id: 'DetallesCliente', label: 'Cliente', type: #COLLECTION },
+              { position: 10, id: 'Libro', label: 'Detalles', type: #FIELDGROUP_REFERENCE, targetQualifier: 'DetallesCliente' }]
+
+  @UI: {
+      fieldGroup: [{ position: 10, qualifier: 'DetallesCliente' }],
+      lineItem: [{ position: 10, importance: #HIGH }] }
+  IdCliente;
+
+  @UI: {
+      fieldGroup: [{ position: 20, qualifier: 'DetallesCliente' }],
+      lineItem: [{ position: 20, importance: #HIGH }] }
+  TipoAcceso;
+
+  @UI: {
+      fieldGroup: [{ position: 30, qualifier: 'DetallesCliente' }],
+      lineItem: [{ position: 30, importance: #HIGH }] }
+  Nombre;
+
+  @UI: {
+      fieldGroup: [{ position: 40, qualifier: 'DetallesCliente' }],
+      lineItem: [{ position: 40, importance: #HIGH }] }
+  Apellidos;
+
+  @UI: {
+      fieldGroup: [{ position: 50, qualifier: 'DetallesCliente' }],
+      lineItem: [{ position: 50, importance: #HIGH }] }
+  Email;
+
+}
