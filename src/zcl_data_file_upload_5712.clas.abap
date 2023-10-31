@@ -20,118 +20,9 @@ ENDCLASS.
 
 
 
-CLASS zcl_data_file_upload_5712 IMPLEMENTATION.
+CLASS ZCL_DATA_FILE_UPLOAD_5712 IMPLEMENTATION.
 
-  METHOD if_http_service_extension~handle_request.
-    CASE request->get_method( ).
-      WHEN CONV string( if_web_http_client=>get ).
-        DATA(sap_table_request) = request->get_header_field( 'sap-table-request' ).
-        IF sap_table_request IS INITIAL.
-          response->set_text( get_html( ) ).
-*        ENDIF.
-        ELSE.
-          DATA(name_filter) = xco_cp_abap_repository=>object_name->get_filter(
-          xco_cp_abap_sql=>constraint->contains_pattern( to_upper( sap_table_request ) && '%' ) ).
-          DATA(objects) = xco_cp_abap_repository=>objects->tabl->where( VALUE #(
-          ( name_filter ) ) )->in( xco_cp_abap=>repository )->get( ).
-          DATA(res) = `[`.
-          LOOP AT objects INTO DATA(object).
-            res &&= |\{ "TABLE_NAME": "{ object->name }" \}|.
-            IF sy-tabix NE lines( objects ).
-              res &&= `,`.
-            ENDIF.
-          ENDLOOP.
-          res &&= `]`.
-          response->set_text( res ).
-        ENDIF.
-      WHEN CONV string( if_web_http_client=>post ).
-* the request comes in with metadata around the actual file data,
-* extract the filename and fileext from this metadata as well as the raw file data.
-        SPLIT request->get_text( ) AT cl_abap_char_utilities=>cr_lf INTO TABLE DATA(content).
-        READ TABLE content REFERENCE INTO DATA(content_item) INDEX 2.
-        IF sy-subrc = 0.
-          SPLIT content_item->* AT ';' INTO TABLE DATA(content_dis).
-          READ TABLE content_dis REFERENCE INTO DATA(content_dis_item) INDEX 3.
-          IF sy-subrc = 0.
-            SPLIT content_dis_item->* AT '=' INTO DATA(fn) filename.
-            REPLACE ALL OCCURRENCES OF `"` IN filename WITH space.
-            CONDENSE filename NO-GAPS.
-            SPLIT filename AT '.' INTO filename fileext.
-          ENDIF.
-        ENDIF.
-        DELETE content FROM 1 TO 4. " Get rid of the first 4 lines
-        DELETE content FROM ( lines( content ) - 8 ) TO lines( content ). " get rid of the last 9 lines
-        LOOP AT content REFERENCE INTO content_item. " put it all back together again humpdy dumpdy....
-          filedata = filedata && content_item->*.
-        ENDLOOP.
-* Unpack input field values such as tablename, dataoption, etc.
-        DATA(ui_data) = request->get_form_field( `filetoupload-data` ).
-        DATA(ui_dataref) = /ui2/cl_json=>generate( json = ui_data ).
-        IF ui_dataref IS BOUND.
-          ASSIGN ui_dataref->* TO FIELD-SYMBOL(<ui_dataref>).
-          tablename = me->get_input_field_value( name = `TABLENAME` dataref = <ui_dataref> ).
-          dataoption = me->get_input_field_value( name = `DATAOPTION` dataref = <ui_dataref> ).
-        ENDIF.
-* Check table name is valid.
-        IF
- xco_cp_abap_repository=>object->tabl->database_table->for(
- iv_name = CONV #( tablename ) )->exists( ) = abap_false
- OR
-        tablename IS INITIAL.
-          response->set_status( i_code = if_web_http_status=>bad_request
-          i_reason = |Table name { tablename } not valid or does not exist| ).
-          response->set_text( |Table name { tablename } not valid or does not exist| ).
-          RETURN.
-        ENDIF.
-* Check file extension is valid, only json today.
-        IF fileext <> `json`.
-          response->set_status( i_code = if_web_http_status=>bad_request
-          i_reason = `File type not supported` ).
-          response->set_text( `File type not supported` ).
-          RETURN.
-        ENDIF.
-* Load the data to the table via dynamic internal table
-        DATA: dynamic_table TYPE REF TO data.
-        FIELD-SYMBOLS: <table_structure> TYPE table.
-        TRY.
-            CREATE DATA dynamic_table TYPE TABLE OF (tablename).
-            ASSIGN dynamic_table->* TO <table_structure>.
-          CATCH cx_sy_create_data_error INTO DATA(cd_exception).
-            response->set_status( i_code = if_web_http_status=>bad_request
-            i_reason = cd_exception->get_text( ) ).
-            response->set_text( cd_exception->get_text( ) ).
-            RETURN.
-        ENDTRY.
-        /ui2/cl_json=>deserialize( EXPORTING json = filedata
-        pretty_name = /ui2/cl_json=>pretty_mode-none
-        CHANGING data = <table_structure> ).
-        IF dataoption = `1`. "if replace, delete the data from the table first
-          DELETE FROM (tablename).
-        ENDIF.
-        TRY.
-            INSERT (tablename) FROM TABLE @<table_structure>.
-            IF sy-subrc = 0.
-              response->set_status( i_code = if_web_http_status=>ok
-              i_reason = `Table updated successfully` ).
-              response->set_text( `Table updated successfully` ).
-            ENDIF.
-          CATCH cx_sy_open_sql_db INTO DATA(db_exception).
-            response->set_status( i_code = if_web_http_status=>bad_request
-            i_reason = db_exception->get_text( ) ).
-            response->set_text( db_exception->get_text( ) ).
-            RETURN.
-        ENDTRY.
-    ENDCASE.
-  ENDMETHOD.
-  METHOD get_input_field_value.
-    FIELD-SYMBOLS: <value> TYPE data,
-                   <field> TYPE any.
-    ASSIGN COMPONENT name OF STRUCTURE dataref TO <field>.
-    IF <field> IS ASSIGNED.
-      ASSIGN <field>->* TO <value>.
-      value = condense( <value> ).
-    ENDIF.
-  ENDMETHOD.
+
   METHOD get_html. ui_html =
     |<!DOCTYPE HTML> \n| &&
     |<html> \n| &&
@@ -257,5 +148,116 @@ CLASS zcl_data_file_upload_5712 IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD get_input_field_value.
+    FIELD-SYMBOLS: <value> TYPE data,
+                   <field> TYPE any.
+    ASSIGN COMPONENT name OF STRUCTURE dataref TO <field>.
+    IF <field> IS ASSIGNED.
+      ASSIGN <field>->* TO <value>.
+      value = condense( <value> ).
+    ENDIF.
+  ENDMETHOD.
 
+
+  METHOD if_http_service_extension~handle_request.
+    CASE request->get_method( ).
+      WHEN CONV string( if_web_http_client=>get ).
+        DATA(sap_table_request) = request->get_header_field( 'sap-table-request' ).
+        IF sap_table_request IS INITIAL.
+          response->set_text( get_html( ) ).
+*        ENDIF.
+        ELSE.
+          DATA(name_filter) = xco_cp_abap_repository=>object_name->get_filter(
+          xco_cp_abap_sql=>constraint->contains_pattern( to_upper( sap_table_request ) && '%' ) ).
+          DATA(objects) = xco_cp_abap_repository=>objects->tabl->where( VALUE #(
+          ( name_filter ) ) )->in( xco_cp_abap=>repository )->get( ).
+          DATA(res) = `[`.
+          LOOP AT objects INTO DATA(object).
+            res &&= |\{ "TABLE_NAME": "{ object->name }" \}|.
+            IF sy-tabix NE lines( objects ).
+              res &&= `,`.
+            ENDIF.
+          ENDLOOP.
+          res &&= `]`.
+          response->set_text( res ).
+        ENDIF.
+      WHEN CONV string( if_web_http_client=>post ).
+* the request comes in with metadata around the actual file data,
+* extract the filename and fileext from this metadata as well as the raw file data.
+        SPLIT request->get_text( ) AT cl_abap_char_utilities=>cr_lf INTO TABLE DATA(content).
+        READ TABLE content REFERENCE INTO DATA(content_item) INDEX 2.
+        IF sy-subrc = 0.
+          SPLIT content_item->* AT ';' INTO TABLE DATA(content_dis).
+          READ TABLE content_dis REFERENCE INTO DATA(content_dis_item) INDEX 3.
+          IF sy-subrc = 0.
+            SPLIT content_dis_item->* AT '=' INTO DATA(fn) filename.
+            REPLACE ALL OCCURRENCES OF `"` IN filename WITH space.
+            CONDENSE filename NO-GAPS.
+            SPLIT filename AT '.' INTO filename fileext.
+          ENDIF.
+        ENDIF.
+        DELETE content FROM 1 TO 4. " Get rid of the first 4 lines
+        DELETE content FROM ( lines( content ) - 8 ) TO lines( content ). " get rid of the last 9 lines
+        LOOP AT content REFERENCE INTO content_item. " put it all back together again humpdy dumpdy....
+          filedata = filedata && content_item->*.
+        ENDLOOP.
+* Unpack input field values such as tablename, dataoption, etc.
+        DATA(ui_data) = request->get_form_field( `filetoupload-data` ).
+        DATA(ui_dataref) = /ui2/cl_json=>generate( json = ui_data ).
+        IF ui_dataref IS BOUND.
+          ASSIGN ui_dataref->* TO FIELD-SYMBOL(<ui_dataref>).
+          tablename = me->get_input_field_value( name = `TABLENAME` dataref = <ui_dataref> ).
+          dataoption = me->get_input_field_value( name = `DATAOPTION` dataref = <ui_dataref> ).
+        ENDIF.
+* Check table name is valid.
+        IF
+ xco_cp_abap_repository=>object->tabl->database_table->for(
+ iv_name = CONV #( tablename ) )->exists( ) = abap_false
+ OR
+        tablename IS INITIAL.
+          response->set_status( i_code = if_web_http_status=>bad_request
+          i_reason = |Table name { tablename } not valid or does not exist| ).
+          response->set_text( |Table name { tablename } not valid or does not exist| ).
+          RETURN.
+        ENDIF.
+* Check file extension is valid, only json today.
+        IF fileext <> `json`.
+          response->set_status( i_code = if_web_http_status=>bad_request
+          i_reason = `File type not supported` ).
+          response->set_text( `File type not supported` ).
+          RETURN.
+        ENDIF.
+* Load the data to the table via dynamic internal table
+        DATA: dynamic_table TYPE REF TO data.
+        FIELD-SYMBOLS: <table_structure> TYPE table.
+        TRY.
+            CREATE DATA dynamic_table TYPE TABLE OF (tablename).
+            ASSIGN dynamic_table->* TO <table_structure>.
+          CATCH cx_sy_create_data_error INTO DATA(cd_exception).
+            response->set_status( i_code = if_web_http_status=>bad_request
+            i_reason = cd_exception->get_text( ) ).
+            response->set_text( cd_exception->get_text( ) ).
+            RETURN.
+        ENDTRY.
+        /ui2/cl_json=>deserialize( EXPORTING json = filedata
+        pretty_name = /ui2/cl_json=>pretty_mode-none
+        CHANGING data = <table_structure> ).
+        IF dataoption = `1`. "if replace, delete the data from the table first
+          DELETE FROM (tablename).
+        ENDIF.
+        TRY.
+            INSERT (tablename) FROM TABLE @<table_structure>.
+            IF sy-subrc = 0.
+              response->set_status( i_code = if_web_http_status=>ok
+              i_reason = `Table updated successfully` ).
+              response->set_text( `Table updated successfully` ).
+            ENDIF.
+          CATCH cx_sy_open_sql_db INTO DATA(db_exception).
+            response->set_status( i_code = if_web_http_status=>bad_request
+            i_reason = db_exception->get_text( ) ).
+            response->set_text( db_exception->get_text( ) ).
+            RETURN.
+        ENDTRY.
+    ENDCASE.
+  ENDMETHOD.
 ENDCLASS.

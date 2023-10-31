@@ -11,7 +11,9 @@ ENDCLASS.
 
 
 
-CLASS zcl_delete_data_5712 IMPLEMENTATION.
+CLASS ZCL_DELETE_DATA_5712 IMPLEMENTATION.
+
+
   METHOD if_oo_adt_classrun~main.
 
     out->write( 'Starting data loading...' ).
@@ -27,5 +29,4 @@ CLASS zcl_delete_data_5712 IMPLEMENTATION.
       out->write( | Datos de la tabla Categorias eliminados| ).
     ENDIF.
   ENDMETHOD.
-
 ENDCLASS.

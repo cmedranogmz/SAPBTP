@@ -1,0 +1,88 @@
+@Metadata.layer: #CORE
+@Search.searchable: true
+@UI.headerInfo: {
+    typeName: 'Travel',
+    typeNamePlural: 'Travels',
+    title: {
+        type: #STANDARD,
+        value: 'TravelId'
+    },
+    description: {
+        type: #STANDARD,
+        value: 'Description'
+    }
+}
+annotate view ZPV_TRAVEL_A_5712 with
+{
+  @UI.facet: [{ position: 10, id: 'Travel', label: 'Travel', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE },
+              { position: 20, id: 'Booking', label: 'Booking', purpose: #STANDARD, type: #LINEITEM_REFERENCE, targetElement: '_Booking' }]
+
+
+  @UI:{
+    lineItem: [{ position: 10, importance: #HIGH }],
+    identification: [{ position: 10, label: 'Travel ID [1,...99999999]' }]
+  }
+  @Search.defaultSearchElement: true
+  TravelId;
+
+  @UI: {
+    lineItem: [{ position: 10, importance: #HIGH }],
+    identification: [{ position: 20 }],
+    selectionField: [{ position: 20 }]
+  }
+  @Consumption.valueHelpDefinition: [{ entity: { name: '/DMO/I_Agency', element: 'AgencyId' } }]
+  AgencyId;
+
+  @UI: {
+    lineItem: [{ position: 30, importance: #HIGH }],
+    identification: [{ position: 30 }],
+    selectionField: [{ position: 30 }]
+  }
+  @Consumption.valueHelpDefinition: [{ entity: { name: '/DMO/I_Customer', element: 'CustomerId' } }]
+  @Search.defaultSearchElement: true
+  CustomerId;
+
+  @UI: {
+    lineItem: [{ position: 40, importance: #MEDIUM }],
+    identification: [{ position: 40 }]
+  }
+  BeginDate;
+
+  @UI: {
+    lineItem: [{ position: 41, importance: #MEDIUM }],
+    identification: [{ position: 40 }]
+  }
+  EndDate;
+
+  @UI.identification: [{ position: 50 }]
+  BookingFee;
+
+  @UI: {
+    lineItem: [{ position: 51, importance: #MEDIUM }],
+    identification: [{ position: 51, label: 'Total Price' }]
+  }
+  TotalPrice;
+
+  @Consumption.valueHelpDefinition: [{ entity: { name: 'I_Currency', element: 'CurrencyCode' } }]
+  CurrencyCode;
+
+  @UI.identification: [{ position: 60 }]
+  Description;
+
+  @UI: {
+    lineItem: [{ position: 70, importance: #HIGH }, 
+               { type: #FOR_ACTION, dataAction: 'acceptTravel', label: 'Accept Travel' },
+               { type: #FOR_ACTION, dataAction: 'rejectTravel', label: 'Reject Travel' }],
+    identification: [{ position: 70 },
+               { type: #FOR_ACTION, dataAction: 'acceptTravel', label: 'Accept Travel' },
+               { type: #FOR_ACTION, dataAction: 'rejectTravel', label: 'Reject Travel' } ],
+    selectionField: [{ position: 80 }]
+  }
+  
+  @EndUserText.label: 'Overall Status'
+  TravelStatus; 
+
+  @UI.hidden: true
+  LastChangedAt;
+
+}
