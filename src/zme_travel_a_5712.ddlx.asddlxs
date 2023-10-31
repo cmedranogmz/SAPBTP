@@ -69,15 +69,15 @@ annotate view ZPV_TRAVEL_A_5712 with
   @UI.identification: [{ position: 60 }]
   Description;
 
-//  @UI: {
-//    lineItem: [{ position: 70, importance: #HIGH }, 
-//               { type: #FOR_ACTION, dataAction: 'acceptTravel', label: 'Accept Travel' },
-//               { type: #FOR_ACTION, dataAction: 'rejectTravel', label: 'Reject Travel' }],
-//    identification: [{ position: 70 },
-//               { type: #FOR_ACTION, dataAction: 'acceptTravel', label: 'Accept Travel' },
-//               { type: #FOR_ACTION, dataAction: 'rejectTravel', label: 'Reject Travel' } ],
-//    selectionField: [{ position: 80 }]
-//  }
+  @UI: {
+    lineItem: [{ position: 70, importance: #HIGH }, 
+               { type: #FOR_ACTION, dataAction: 'acceptTravel', label: 'Accept Travel' },
+               { type: #FOR_ACTION, dataAction: 'rejectTravel', label: 'Reject Travel' }],
+    identification: [{ position: 70 },
+               { type: #FOR_ACTION, dataAction: 'acceptTravel', label: 'Accept Travel' },
+               { type: #FOR_ACTION, dataAction: 'rejectTravel', label: 'Reject Travel' } ],
+    selectionField: [{ position: 80 }]
+  }
   
   @EndUserText.label: 'Overall Status'
   TravelStatus; 

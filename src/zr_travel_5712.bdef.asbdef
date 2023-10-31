@@ -11,7 +11,7 @@ etag master LastChangedAt
 {
   field ( readonly ) LastChangedAt, LastChangedBy, CreatedAt, CreatedBy;  //Administrative fields: read only
   field ( mandatory ) AgencyId, OverallStatus, BookingFee, CurrencyCode; //Mandatory fields that are required to create a Travel
-  field ( features : instance ) TravelId; //Dynamic field control
+  field ( features : instance ) TravelId, OverallStatus; //Dynamic field control
   //field (numbering : managed) TravelId; // El framework se encarga de asignar el valor con el tipo de dato: ABP_BEHV_PID
 
   create;

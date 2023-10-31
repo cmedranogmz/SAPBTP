@@ -10,7 +10,7 @@ use etag
 
   use action acceptTravel;
   use action rejectTravel;
-  use action createTravelByTemplate;
+//  use action createTravelByTemplate;
 
   //  use association _Booking { create; }
 }
