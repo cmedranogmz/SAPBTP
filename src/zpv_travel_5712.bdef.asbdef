@@ -1,0 +1,35 @@
+projection;
+//strict ( 2 ); //Uncomment this line in order to enable strict mode 2. The strict mode has two variants (strict(1), strict(2)) and is prerequisite to be future proof regarding syntax and to be able to release your BO.
+
+define behavior for ZPV_TRAVEL_5712 alias TravelProcessor
+use etag
+{
+  field ( readonly ) TotalPrice;
+  use create;
+  use update;
+  use delete;
+
+  use action acceptTravel;
+  use action rejectTravel;
+  use action createTravelByTemplate;
+
+  use association _Booking { create; }
+}
+
+define behavior for ZPV_BOOKING_5712 alias BookingProcessor
+{
+  use update;
+  //use delete;
+
+  use association _Travel;
+  use association _BookingSupplement { create; }
+}
+
+define behavior for ZPV_BOOKSUP_5712 alias SupplementProcessor
+{
+  use update;
+  //use delete;
+
+  use association _Travel;
+  use association _Booking;
+}
