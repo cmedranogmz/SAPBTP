@@ -6,7 +6,7 @@
     title: {
         type: #STANDARD,
         value: 'TravelId'
-    },
+    }, 
     description: {
         type: #STANDARD,
         value: 'Description'
@@ -30,7 +30,7 @@ annotate view ZPV_TRAVEL_5712 with
     identification: [{ position: 20 }],
     selectionField: [{ position: 20 }]
   }
-  @Consumption.valueHelpDefinition: [{ entity: { name: '/DMO/I_Agency', element: 'AgencyId' } }]
+  @Consumption.valueHelpDefinition: [{ entity: { name: '/DMO/I_Agency', element: 'AgencyID' } }]
   AgencyId;
 
   @UI: {
@@ -38,7 +38,7 @@ annotate view ZPV_TRAVEL_5712 with
     identification: [{ position: 30 }],
     selectionField: [{ position: 30 }]
   }
-  @Consumption.valueHelpDefinition: [{ entity: { name: '/DMO/I_Customer', element: 'CustomerId' } }]
+  @Consumption.valueHelpDefinition: [{ entity: { name: '/DMO/I_Customer', element: 'CustomerID' } }]
   @Search.defaultSearchElement: true
   CustomerId;
 
@@ -63,7 +63,7 @@ annotate view ZPV_TRAVEL_5712 with
   }
   TotalPrice;
 
-  @Consumption.valueHelpDefinition: [{ entity: { name: 'I_Currency', element: 'CurrencyCode' } }]
+  @Consumption.valueHelpDefinition: [{ entity: { name: 'I_Currency', element: 'Currency' } }]
   CurrencyCode;
 
   @UI.identification: [{ position: 60 }]
@@ -73,7 +73,7 @@ annotate view ZPV_TRAVEL_5712 with
     lineItem: [{ position: 70, importance: #HIGH },
                { type: #FOR_ACTION, dataAction: 'createTravelByTemplate', label: 'Create Travel By Template' }],
     identification: [{ position: 70, label: 'Status [O(Open)|A(Accepted)|X(Caceled)]' }]
-  }
+  } 
   TravelStatus;
 
   @UI.hidden: true

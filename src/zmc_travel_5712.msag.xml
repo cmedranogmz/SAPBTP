@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_MSAG" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <T100A>
+    <ARBGB>ZMC_TRAVEL_5712</ARBGB>
+    <MASTERLANG>E</MASTERLANG>
+    <STEXT>Message Class - Travel 5712</STEXT>
+   </T100A>
+   <T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZMC_TRAVEL_5712</ARBGB>
+     <MSGNR>001</MSGNR>
+     <TEXT>Customer &amp;1 unknow</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZMC_TRAVEL_5712</ARBGB>
+     <MSGNR>002</MSGNR>
+     <TEXT>Begin date &amp;1 must not be after end date &amp;2 for travel &amp;3</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZMC_TRAVEL_5712</ARBGB>
+     <MSGNR>003</MSGNR>
+     <TEXT>Begin date &amp;1 must be on after system date</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZMC_TRAVEL_5712</ARBGB>
+     <MSGNR>004</MSGNR>
+     <TEXT>Travel status not valid for travel &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZMC_TRAVEL_5712</ARBGB>
+     <MSGNR>005</MSGNR>
+     <TEXT>Travel &amp;1 accepted</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZMC_TRAVEL_5712</ARBGB>
+     <MSGNR>006</MSGNR>
+     <TEXT>Travel &amp;1 rejected</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZMC_TRAVEL_5712</ARBGB>
+     <MSGNR>007</MSGNR>
+     <TEXT>Status not valid for Booking &amp;1</TEXT>
+    </T100>
+   </T100>
+  </asx:values>
+ </asx:abap>
+</abapGit>

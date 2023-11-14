@@ -2,15 +2,16 @@ managed;
 //implementation in class zbp_r_travel_5712 unique; //Clase unica
 //strict ( 2 );
 
-define behavior for ZR_TRAVEL_5712 alias Travel
+define behavior for zr_travel_5712 alias Travel
 implementation in class zbp_travel_5712 unique
 persistent table ztb_travel_5712
+with additional save
 lock master //Bloquear la instancia raiz
 authorization master ( instance )
 etag master LastChangedAt
 {
   field ( readonly ) LastChangedAt, LastChangedBy, CreatedAt, CreatedBy;  //Administrative fields: read only
-  field ( mandatory ) AgencyId, OverallStatus, BookingFee, CurrencyCode; //Mandatory fields that are required to create a Travel
+  field ( mandatory : create ) TravelId, AgencyId, OverallStatus, BookingFee, CurrencyCode; //Mandatory fields that are required to create a Travel
   field ( features : instance ) TravelId, OverallStatus; //Dynamic field control
   //field (numbering : managed) TravelId; // El framework se encarga de asignar el valor con el tipo de dato: ABP_BEHV_PID
 
@@ -19,9 +20,9 @@ etag master LastChangedAt
   delete;
 
   //Validations
-  validation validateCustomer on save { field CustomerId; }
-  validation validateDates on save { field BeginDate, EndDate; }
-  validation validateStatus on save { field OverallStatus; }
+  validation validateCustomer on save { create; field CustomerId; }
+  validation validateDates on save { create; field BeginDate, EndDate; }
+  validation validateStatus on save { create; field OverallStatus; }
 
   //Actions of instance
   action ( features : instance ) acceptTravel result [1] $self;
@@ -31,7 +32,7 @@ etag master LastChangedAt
   //internal action createTravelByTemplate result[1] $self; //Action internal
   //action createTravelByTemplate external 'CreateTravelWithCopy' result[1] $self;
 
-  association _Booking { create; }
+  association _Booking { create ( features : instance ); }
 
   //Mapping CDS field = Table Field
   //mapping for ztb_travel_5712 corresponding; // Mapeo por correspondencia de nombres de campos
@@ -63,14 +64,15 @@ authorization dependent by _Travel
 etag master LastChangedAt
 {
   field ( readonly ) TravelId; //Static fields control
-  field ( mandatory ) CarrierId, ConnectionId, FlightDate, BookingStatus;
+  field ( mandatory : create ) BookingId, CarrierId, ConnectionId, FlightDate, BookingStatus;
+
   update;
   delete;
 
-  validation validateStatus on save { field BookingStatus; }
+  validation validateStatus on save { create; field BookingStatus; }
 
   association _Travel;
-  association _BookingSupplement { create; }
+  association _BookingSupplement { create ( features : instance ); }
 
   //Determinations
   determination calculateTotalFlightPrice on modify { field FlightPrice, CurrencyCode; }
@@ -104,9 +106,11 @@ authorization dependent by _Travel
 etag master LastChangedAt
 {
   field ( readonly ) TravelId, BookingId;
-  field ( mandatory ) SupplementId, Price;
+  field ( mandatory : create ) SupplementId, Price;
+
   update;
   delete;
+
   association _Travel;
   association _Booking;
 

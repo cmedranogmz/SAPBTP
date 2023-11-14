@@ -11,7 +11,8 @@ ENDCLASS.
 
 
 
-CLASS zcl_insert_data_5712 IMPLEMENTATION.
+CLASS ZCL_INSERT_DATA_5712 IMPLEMENTATION.
+
 
   METHOD if_oo_adt_classrun~main.
 
@@ -62,6 +63,4 @@ CLASS zcl_insert_data_5712 IMPLEMENTATION.
     ENDIF.
 
   ENDMETHOD.
-
 ENDCLASS.
-
