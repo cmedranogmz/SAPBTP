@@ -58,7 +58,7 @@ annotate view ZPV_TRAVEL_5712 with
   BookingFee;
 
   @UI: {
-    lineItem: [{ position: 51, importance: #MEDIUM }],
+    lineItem: [{ position: 51, importance: #HIGH }],
     identification: [{ position: 51, label: 'Total Price' }]
   }
   TotalPrice;
@@ -78,5 +78,10 @@ annotate view ZPV_TRAVEL_5712 with
 
   @UI.hidden: true
   LastChangedAt;
+  
+  @UI: { 
+    lineItem: [{ position: 80, importance: #HIGH }]}
+  @EndUserText.label: 'Discount 10%'
+  DiscountPrice;
 
 }

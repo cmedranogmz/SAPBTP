@@ -106,7 +106,6 @@ CLASS lhc_Travel IMPLEMENTATION.
              CreatedAt
              LastChangedBy
              LastChangedAt )
-
     WITH VALUE #( FOR key_row_read IN keys ( TravelId = key_row_read-TravelId ) )
     RESULT DATA(lt_travel).
 
@@ -154,7 +153,6 @@ CLASS lhc_Travel IMPLEMENTATION.
              CreatedAt
              LastChangedBy
              LastChangedAt )
-
     WITH VALUE #( FOR key_row_read IN keys ( TravelId = key_row_read-TravelId ) )
     RESULT DATA(lt_travel).
 
@@ -359,7 +357,6 @@ CLASS lhc_Travel IMPLEMENTATION.
 
     ENDLOOP.
 
-
   ENDMETHOD.
 
 ENDCLASS.
@@ -394,6 +391,7 @@ CLASS lsc_ZR_TRAVEL_5712 IMPLEMENTATION.
       lt_travel_log = CORRESPONDING #( create-travel ).
 
       LOOP AT lt_travel_log ASSIGNING FIELD-SYMBOL(<ls_travel_log>).
+
         GET TIME STAMP FIELD <ls_travel_log>-created_at.
         <ls_travel_log>-changing_operation = lsc_zr_travel_5712=>create.
 

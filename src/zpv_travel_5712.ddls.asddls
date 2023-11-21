@@ -29,6 +29,9 @@ define root view entity ZPV_TRAVEL_5712
       LastChangedBy,
       @Semantics.systemDateTime.lastChangedAt: true
       LastChangedAt,
+      @Semantics.amount.currencyCode: 'CurrencyCode'
+      @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZCL_VIRTUAL_ELEMENT_5712'
+      virtual DiscountPrice : /dmo/total_price,
       /* Associations */
       _Agency,
       _Booking : redirected to composition child ZPV_BOOKING_5712,
